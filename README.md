@@ -17,6 +17,47 @@
 
 本人python比较菜，因此可能有些地方写的比较屎，还望轻喷
 
+
+
+# 安装之前
+
+## 关于安装pyopenjtalk的问题
+
+如果先前已经安装了pyopenjtalk，该内容可以直接忽略
+
+在windows下安装时，可能会出现以下错误
+
+这是由于缺少cmake和MSVC造成的，需要在本机安装
+
+如果你不清楚自己有没有，可以先尝试安装，如果出现了以上报错，可以再回来阅读一下解决方案
+
+**以下是关于windows上安装pyopenjtalk的解决方案**
+
+### 第一步 安装Visual Studio
+
+在Visual Studio的官网下载安装器,[点击此处下载](https://visualstudio.microsoft.com/zh-hans/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=2030&passive=false)
+
+下载后点击，进入如图所示先点击修改，然后选择如图所示的项目
+
+<img src="./images/nonebot_plugin_tts_gal_1.jpg" alt="图1" style="zoom:50%;" />
+
+<img src="./images/nonebot_plugin_tts_gal_2.jpg" alt="图2" style="zoom:50%;" />
+
+下载好后，在安装目录中找到cmake和MSVC的bin目录
+
+下面是参考目录,前面的目录即为之前强调的路径
+
+```
+E:\Program Files (x86)\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin
+
+E:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\bin\Hostx86\x64
+
+```
+
+将这两个目录添加到环境变量中
+
+这样，安装pyopenjtalk的前置依赖便解决了
+
 # 安装
 
 pip安装
@@ -50,7 +91,7 @@ ffmpeg的安装
 
 #### Windows
 
-在ffmpeg官网下载[ffmpeg下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
+在ffmpeg官网[下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
 
 其他具体细节可自行搜索
 
@@ -82,7 +123,7 @@ auto_delete_voice = False
 
 # 使用
 
-群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(会自动转为日文，故也可以输入中文)
+群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(会自动转为日文，故也可以输入中文等其他语言)
 
 ## 群聊
 
@@ -110,6 +151,18 @@ auto_delete_voice = False
 # 今后
 
 添加更多的模型
+
+
+
+# Q&A
+
+## 安装pyopenjtalk
+
+如果出现如下错误
+
+<img src="./images/nonebot_plugin_tts_gal_3.jpg" alt="图3" style="zoom:80%;" />
+
+请参考上面的安装之前的说明
 
 
 
