@@ -37,7 +37,18 @@ nb plugin install nonebot-plugin-tts-gal
 
 下载`data`文件夹，并放入在bot的运行目录下
 
+下载model文件
 
+[YuzuSoft_365_epochs.pth](https://sjtueducn-my.sharepoint.com/:u:/g/personal/cjang_cjengh_sjtu_edu_cn/EXTQrTj-UJpItH3BmgIUvhgBNZk88P1tT_7GPNr4yegNyw?e=5mcwgl)
+
+将文件重命名为`YuzuSoft_365_epochs.pth`
+
+[ATRI_vits_900E_G_38000.pth](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
+
+找到pth文件
+
+
+最后将这两个pth文件放入到`data/nonebot_plugin_tts_gal/model/`下
 
 ## 相关依赖
 
