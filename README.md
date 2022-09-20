@@ -25,12 +25,6 @@ pip安装
 pip install nonebot_plugin_tts_gal
 ```
 
-nb-cli安装
-
-```
-nb plugin install nonebot-plugin-tts-gal
-```
-
 
 
 ## 资源文件
