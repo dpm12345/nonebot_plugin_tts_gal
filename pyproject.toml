@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "nonebot_plugin_tts_gal"
+version = "0.1.0"
+description = ""
+authors = ["dpm12345 <1006975692@qq.com>"]
+readme = "README.md"
+homepage = "https://github.com/dpm12345/nonebot_plugin_tts_gal"
+repository = "https://github.com/dpm12345/nonebot_plugin_tts_gal"
+license = "MIT"
+
+
+[tool.poetry.dependencies]
+python = "^3.7.3"
+nonebot2 = "^2.0.0-beta.1"
+numpy = "^1.18.5"
+unidecode = "^1.1.1"
+pyopenjtalk = "^0.2.0"
+torch = "^1.6.0"
+numba = "^0.56.0"
+ffmpy = "^0.3.0"
+jamo = "^0.4.1"
+scipy = "^1.5.2"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
