@@ -25,23 +25,25 @@
 
 如果先前已经安装了pyopenjtalk，该内容可以直接忽略
 
-在windows下安装时，可能会出现以下错误
-
-这是由于缺少cmake和MSVC造成的，需要在本机安装
+可能由于缺少cmake和MSVC造成的，需要在本机安装
 
 如果你不清楚自己有没有，可以先尝试安装，如果出现了以上报错，可以再回来阅读一下解决方案
 
-**以下是关于windows上安装pyopenjtalk的解决方案**
+### Windows
 
-### 第一步 安装Visual Studio
+#### 第一步 安装Visual Studio
 
 在Visual Studio的官网下载安装器,[点击此处下载](https://visualstudio.microsoft.com/zh-hans/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=2030&passive=false)
+
+#### 第二步 下载相关工具
 
 下载后点击，进入如图所示先点击修改，然后选择如图所示的项目
 
 <img src="./images/nonebot_plugin_tts_gal_1.jpg" alt="图1" style="zoom:50%;" />
 
 <img src="./images/nonebot_plugin_tts_gal_2.jpg" alt="图2" style="zoom:50%;" />
+
+#### 第三步 设置环境变量
 
 下载好后，在安装目录中找到cmake和MSVC的bin目录
 
@@ -56,7 +58,21 @@ E:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.3
 
 将这两个目录添加到环境变量中
 
-这样，安装pyopenjtalk的前置依赖便解决了
+这样，windows安装pyopenjtalk的前置依赖便解决了
+
+### Linux
+
+Linux如出现以下情况
+
+<img src="./images/nonebot_plugin_tts_gal_4.jpg" alt="图4" style="zoom:50%;" />
+
+原因为缺少cmake工具，可以使用apt命令下载安装
+
+```
+sudo apt install cmake
+```
+
+安装好后便可安装pyopenjtalk
 
 # 安装
 
@@ -164,7 +180,9 @@ auto_delete_voice = False
 
 请参考上面的安装之前的说明
 
+## 无法生成语音
 
+如果出现下载open_jtalk的错误信息，可以再次尝试，如果实在不行，可以使用`pip install openjtalk`
 
 # 感谢
 
