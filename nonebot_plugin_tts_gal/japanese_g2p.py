@@ -48,4 +48,4 @@ def get_romaji_with_space_and_accent(text):
             text += unidecode(marks[i]).replace(' ', '')
     if re.match('[A-Za-z]', text[-1]):
         text += '.'
-    return text.replace('ts','ʦ').replace('...','…')
+    return text.replace('ts','ʦ')
