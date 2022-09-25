@@ -10,7 +10,6 @@ import os
 from .text import text_to_sequence
 from .commons import intersperse
 from torch import no_grad, LongTensor
-from .models import SynthesizerTrn
 from .utils import *
 
 
@@ -23,10 +22,11 @@ def get_text(text, hps, cleaned=False):
         text_norm = intersperse(text_norm, 0)
     text_norm = LongTensor(text_norm)
     return text_norm
+def changeC2E(s:str):
+    return s.replace("。",".").replace("？","?").replace("！","!")
 
 
-
-async def translate(text: str) -> str:
+async def translate_youdao(text: str) -> str:
     url = f"https://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
@@ -35,13 +35,13 @@ async def translate(text: str) -> str:
     }
     ts = str(int(time.time() * 1000))
     salt = ts + str(random.randint(0, 9))
-    temp = "fanyideskweb" + text + salt + "Y2FYu%TNSbMCxc3t2u^XT"
+    temp = "fanyideskweb" + text + salt + "Ygy_4c=r#e#4EX^NUGUc5"
     md5 = hashlib.md5()
     md5.update(temp.encode())
     sign = md5.hexdigest()
     data = {
         "i": text,
-        "from": "zh-CHS",
+        "from": "Auto",
         "to": "ja",
         "smartresult": "dict",
         "client": "fanyideskweb",
