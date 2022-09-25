@@ -113,7 +113,7 @@ nb plugin install nonebot-plugin-tts-gal
 <details>
 <summary>ffmpeg的安装</summary> 
 
-
+  
 **Windows**
 
 在ffmpeg官网[下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
