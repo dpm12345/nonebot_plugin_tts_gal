@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot_plugin_tts_gal"
-version = "0.1.1"
+version = "0.2.0"
 description = ""
 authors = ["dpm12345 <1006975692@qq.com>"]
 readme = "README.md"
