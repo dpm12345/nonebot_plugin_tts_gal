@@ -28,10 +28,9 @@ __plugin_meta__ = PluginMetadata(
     description="部分gal角色文本转语音",
     usage="触发方式：@机器人 [角色名][发送|说][文本内容]",
     extra={
-        "unique_name": "petpet",
         "example": "@机器人 宁宁说おはようございます.",
-        "author": "zhong <1006975692@qq.com>",
-        "version": "0.1.0",
+        "author": "dpm12345 <1006975692@qq.com>",
+        "version": "0.2.0",
     },
 )
 
@@ -40,26 +39,10 @@ base_path = Path() / "data" / "nonebot_plugin_tts_gal"
 voice_path = base_path / "voice"
 model_path = base_path / "model"
 config_path = base_path / "config"
-speak = [
-    ["宁宁","绫地宁宁"],
-    ["因幡爱瑠","爱瑠"],
-    ["朝武芳乃","芳乃"],
-    ["常陸茉子","茉子"],
-    ["丛雨","幼刀"],
-    ["鞍馬小春","鞍马小春","小春"],
-    ["在原七海","七海"],
-    ["ATRI","atri","亚托莉"]
-]
-
-config_files = [
-    "YuzuSoft.json",
-    "ATRI.json"
-]
-
-models = ["YuzuSoft_365_epochs.pth","ATRI_vits_900E_G_38000.pth"]
 
 
 auto_delete_voice = get_driver().config.auto_delete_voice
+tts_gal = eval(get_driver().config.tts_gal)
 driver = get_driver()
 
 
@@ -67,6 +50,10 @@ driver = get_driver()
 def _():
     logger.info("正在检查目录是否存在...")
     asyncio.ensure_future(checkDir(data_path,base_path,voice_path))
+    filenames = []
+    [filenames.append(model[0]) for model in tts_gal.values() if not model[0] in filenames]
+    logger.info("正在检查配置文件是否存在...")
+    asyncio.ensure_future(checkFile(model_path,config_path,filenames))
 
     
 
@@ -80,26 +67,24 @@ async def voicHandler(
     name: str = RegexArg("name"),
     text: str = RegexArg("text")
 ):
-    text = await translate(text)
+    index = None
+    config_file = ""
+    model_file = ""
+    for names,model in tts_gal.items():
+        if name in names:
+            config_file = model[0] + ".json"
+            model_file = model[0] + ".pth"
+            index = None if len(model) == 1 else int(model[1])
+            break
+    if config_file == "":
+        await voice.finish(MessageSegment.at(event.get_user_id()) + "暂时还未有该角色")
+    text = changeC2E(text)
+    text = await translate_youdao(text)
     text = get_romaji_with_space_and_accent(text)
     first_name = "".join(random.sample([x for x in string.ascii_letters + string.digits] , 8))
     filename = hashlib.md5(first_name.encode()).hexdigest() + ".mp3"
-    index = 0
-    for i in range(len(speak)):
-        if name in speak[i]:
-            index = i
-            break
-    config_file = ""
-    model_file = ""
-    if index <= 6:
-        model_file = model_path / models[0]
-        config_file = config_path / config_files[0]
-    elif index == 7:
-        model_file = model_path / models[1]
-        config_file = config_path / config_files[1]
-
     try:
-        hps_ms = get_hparams_from_file(config_file)
+        hps_ms = get_hparams_from_file( config_path / config_file)
         net_g_ms = SynthesizerTrn(
             len(hps_ms.symbols),
             hps_ms.data.filter_length // 2 + 1,
@@ -107,34 +92,28 @@ async def voicHandler(
             n_speakers=hps_ms.data.n_speakers,
             **hps_ms.model)
         _ = net_g_ms.eval()
-        load_checkpoint(model_file, net_g_ms)
+        load_checkpoint(model_path / model_file, net_g_ms)
     except:
-        await voice.send("加载模型失败")
+        await voice.finish("加载模型失败")
     text = get_text(text, hps_ms, cleaned=True)
     try:
-        if index <= 6:
-            with no_grad():
-                x_tst = text.unsqueeze(0)
-                x_tst_lengths = LongTensor([text.size(0)])
-                sid = LongTensor([index])
-                audio = net_g_ms.infer(x_tst, x_tst_lengths, sid=sid, noise_scale=.667, noise_scale_w=0.8, length_scale=1)[0][0,0].data.cpu().float().numpy()
-        elif index == 7:
-            with no_grad():
-                x_tst = text.unsqueeze(0)
-                x_tst_lengths = LongTensor([text.size(0)])
-                audio = net_g_ms.infer(x_tst, x_tst_lengths, noise_scale=.667, noise_scale_w=0.8, length_scale=1)[0][0,0].data.cpu().float().numpy()
+        with no_grad():
+            x_tst = text.unsqueeze(0)
+            x_tst_lengths = LongTensor([text.size(0)])
+            sid = LongTensor([index]) if not index == None else None
+            audio = net_g_ms.infer(x_tst, x_tst_lengths, sid=sid, noise_scale=.667, noise_scale_w=0.8, length_scale=1)[0][0,0].data.cpu().float().numpy()
         write(voice_path / filename, hps_ms.data.sampling_rate, audio)
         new_voice = Path(change_by_decibel(voice_path / filename,voice_path,-10))
-        try:
-            await voice.send(MessageSegment.record(file=new_voice))
-        except ActionFailed:
-            traceback.print_exc()
-            await voice.send("发送失败,请重试")
-        except NetworkError:
-            await voice.send("发送超时,也许等等就好了")
-        finally:
-            if auto_delete_voice:
-                os.remove(new_voice)
     except:
         traceback.print_exc()
-        await voice.send('生成失败')
+        await voice.finish('生成失败')
+    try:
+        await voice.send(MessageSegment.record(file=new_voice))
+    except ActionFailed:
+        traceback.print_exc()
+        await voice.send("发送失败,请重试")
+    except NetworkError:
+        await voice.send("发送超时,也许等等就好了")
+    finally:
+        if auto_delete_voice:
+                os.remove(new_voice)
