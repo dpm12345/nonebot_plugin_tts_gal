@@ -29,8 +29,13 @@ __plugin_meta__ = PluginMetadata(
     usage="触发方式：@机器人 [角色名][发送|说][文本内容]",
     extra={
         "example": "@机器人 宁宁说おはようございます.",
+<<<<<<< HEAD
         "author": "dpm12345 <1006975692@qq.com>",
         "version": "0.2.0",
+=======
+        "author": "zhong <1006975692@qq.com>",
+        "version": "0.1.1",
+>>>>>>> d93193e9d4fb2529daf07675152ed8d95bdebf2e
     },
 )
 
