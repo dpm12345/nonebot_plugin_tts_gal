@@ -130,6 +130,8 @@ apt-get install ffmpeg
 
 或者下载源码安装(具体可搜索相关教程)
 
+</details>
+
 # 配置项
 
 请在使用的配置文件(.env.*)加入
@@ -143,7 +145,6 @@ auto_delete_voice = True
 ```
 auto_delete_voice = False
 ```
-</details>
 
 
 # 使用
