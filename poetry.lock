@@ -72,11 +72,11 @@ python-versions = "*"
 
 [[package]]
 name = "h11"
-version = "0.13.0"
+version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 typing-extensions = {version = "*", markers = "python_version < \"3.8\""}
@@ -249,7 +249,7 @@ python-versions = "*"
 
 [[package]]
 name = "pyopenjtalk"
-version = "0.2.0"
+version = "0.3.0"
 description = "A python wrapper for OpenJTalk"
 category = "main"
 optional = false
@@ -257,13 +257,14 @@ python-versions = "*"
 
 [package.dependencies]
 cython = ">=0.21.0"
-numpy = ">=1.8.0"
+numpy = ">=1.20.0"
 six = "*"
 tqdm = "*"
 
 [package.extras]
 docs = ["Jinja2 (>=3.0.1)", "ipython", "jupyter", "nbsphinx (>=0.8.6)", "pandoc", "sphinx_rtd_theme"]
-lint = ["black (>=19.19b0,<=20.8)", "flake8 (>=3.7,<4)", "flake8-bugbear", "isort (>=4.3,<5.2.0)", "mypy (<=0.910)", "pysen", "types-setuptools"]
+lint = ["black (>=19.19b0,<=20.8)", "click (<8.1.0)", "flake8 (>=3.7,<4)", "flake8-bugbear", "isort (>=4.3,<5.2.0)", "mypy (<=0.910)", "pysen", "types-decorator", "types-setuptools"]
+marine = ["marine (>=0.0.5)"]
 test = ["pytest", "scipy"]
 
 [[package]]
@@ -341,7 +342,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "tomlkit"
-version = "0.11.4"
+version = "0.11.5"
 description = "Style preserving TOML library"
 category = "main"
 optional = false
@@ -485,7 +486,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7.3"
-content-hash = "99a9384aebca34868305be4465baa8afc59a993474a2cee6f92cad55958cf654"
+content-hash = "7a432d6cac996d9415cd08b4a649457359ed01b01b564ec469e6465b11d6a0c0"
 
 [metadata.files]
 anyio = [
@@ -550,8 +551,8 @@ ffmpy = [
     {file = "ffmpy-0.3.0.tar.gz", hash = "sha256:757591581eee25b4a50ac9ffb9b58035a2794533db47e0512f53fb2d7b6f9adc"},
 ]
 h11 = [
-    {file = "h11-0.13.0-py3-none-any.whl", hash = "sha256:8ddd78563b633ca55346c8cd41ec0af27d3c79931828beffb46ce70a379e7442"},
-    {file = "h11-0.13.0.tar.gz", hash = "sha256:70813c1135087a248a4d38cc0e1a0181ffab2188141a93eaf567940c3957ff06"},
+    {file = "h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761"},
+    {file = "h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d"},
 ]
 httptools = [
     {file = "httptools-0.5.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:8f470c79061599a126d74385623ff4744c4e0f4a0997a353a44923c0b561ee51"},
@@ -866,7 +867,7 @@ pygtrie = [
     {file = "pygtrie-2.5.0.tar.gz", hash = "sha256:203514ad826eb403dab1d2e2ddd034e0d1534bbe4dbe0213bb0593f66beba4e2"},
 ]
 pyopenjtalk = [
-    {file = "pyopenjtalk-0.2.0.tar.gz", hash = "sha256:ff203ccc53c6f35e22fd3d2ed17461d41ad741cfbedb412c743b71cc3fabebbc"},
+    {file = "pyopenjtalk-0.3.0.tar.gz", hash = "sha256:648f3de5a282f21a941b0379847e689c9e29f36ab5d159fa886db6aaf5d7d516"},
 ]
 python-dotenv = [
     {file = "python-dotenv-0.21.0.tar.gz", hash = "sha256:b77d08274639e3d34145dfa6c7008e66df0f04b7be7a75fd0d5292c191d79045"},
@@ -952,8 +953,8 @@ starlette = [
     {file = "starlette-0.19.1.tar.gz", hash = "sha256:c6d21096774ecb9639acad41b86b7706e52ba3bf1dc13ea4ed9ad593d47e24c7"},
 ]
 tomlkit = [
-    {file = "tomlkit-0.11.4-py3-none-any.whl", hash = "sha256:25d4e2e446c453be6360c67ddfb88838cfc42026322770ba13d1fbd403a93a5c"},
-    {file = "tomlkit-0.11.4.tar.gz", hash = "sha256:3235a9010fae54323e727c3ac06fb720752fe6635b3426e379daec60fbd44a83"},
+    {file = "tomlkit-0.11.5-py3-none-any.whl", hash = "sha256:f2ef9da9cef846ee027947dc99a45d6b68a63b0ebc21944649505bf2e8bc5fe7"},
+    {file = "tomlkit-0.11.5.tar.gz", hash = "sha256:571854ebbb5eac89abcb4a2e47d7ea27b89bf29e09c35395da6f03dd4ae23d1c"},
 ]
 torch = [
     {file = "torch-1.12.1-cp310-cp310-manylinux1_x86_64.whl", hash = "sha256:9c038662db894a23e49e385df13d47b2a777ffd56d9bcd5b832593fab0a7e286"},
