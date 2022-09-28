@@ -113,7 +113,7 @@ nb plugin install nonebot-plugin-tts-gal
 <details>
 <summary>ffmpeg的安装</summary> 
 
-
+  
 **Windows**
 
 在ffmpeg官网[下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
@@ -130,6 +130,8 @@ apt-get install ffmpeg
 
 或者下载源码安装(具体可搜索相关教程)
 
+</details>
+
 # 配置项
 
 请在使用的配置文件(.env.*)加入
@@ -143,7 +145,6 @@ auto_delete_voice = True
 ```
 auto_delete_voice = False
 ```
-</details>
 
 
 # 使用
@@ -210,4 +211,5 @@ auto_delete_voice = False
 
 # 更新日志
 **2022.9.21**:修改依赖
+
 **2022.9.25**:优化修改代码逻辑，支持自行添加vits模型，简单修复了一下有道翻译的翻译问题，启动时自动检测所需文件是否缺失
