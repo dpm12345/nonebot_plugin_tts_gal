@@ -23,7 +23,7 @@ def get_text(text, hps, cleaned=False):
     text_norm = LongTensor(text_norm)
     return text_norm
 def changeC2E(s:str):
-    return s.replace("。",".").replace("？","?").replace("！","!")
+    return s.replace("。",".").replace("？","?").replace("！","!").replace("，",",")
 
 
 async def translate_youdao(text: str) -> str:
