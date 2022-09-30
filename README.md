@@ -137,13 +137,13 @@ apt-get install ffmpeg
 请在使用的配置文件(.env.*)加入
 
 ```
-auto_delete_voice = True
+auto_delete_voice = true
 ```
 
 用于是否自动删除生成的语音文件，如不想删除，可改为
 
 ```
-auto_delete_voice = False
+auto_delete_voice = false
 ```
 
 
