@@ -3,7 +3,7 @@ import re
 
 from nonebot.rule import Rule
 from nonebot.typing import T_State
-from nonebot.params import State, Depends
+from nonebot.params import Depends
 from nonebot.adapters.onebot.v11 import (
     Bot,
     Message,
@@ -18,7 +18,7 @@ REGEX_ARG = "REGEX_ARG"
 
 
 def regex(pattern: str) -> Rule:
-    def checker(event: MessageEvent, state: T_State = State()) -> bool:
+    def checker(event: MessageEvent, state: T_State) -> bool:
         if isinstance(event,GroupMessageEvent) and not event.is_tome():
             return False
         msg = event.get_message()
@@ -45,7 +45,7 @@ def regex(pattern: str) -> Rule:
 
 
 def RegexArg(key: str):
-    async def dependency(state: T_State = State()):
+    async def dependency(state: T_State):
         arg: dict = state[REGEX_DICT]
         return arg.get(key, None)
 
