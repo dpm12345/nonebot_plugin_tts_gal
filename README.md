@@ -113,7 +113,7 @@ nb plugin install nonebot-plugin-tts-gal
 <details>
 <summary>ffmpeg的安装</summary> 
 
-  
+
 **Windows**
 
 在ffmpeg官网[下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
@@ -210,26 +210,23 @@ auto_delete_voice = false
 + **[luoyily](https://github.com/luoyily)**：分享的[ATRI模型](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
 
 # 更新日志
-**2022.9.28**:
+**2022.10.7 version 0.2.3:**
 
-version 0.2.2:
+适配nonebot2-rc1版本，并添加部分报错信息提醒
+
+**2022.9.28 version 0.2.2:**
 
 添加中文逗号替换成英文逗号
 
- version 0.2.1:
- 
- 将pyopenjtalk依赖更新为0.3.0，使python3.10也能使用
+**version 0.2.1:**
 
-**2022.9.25**:
+将pyopenjtalk依赖更新为0.3.0，使python3.10也能使用
 
-version 0.2.0:
+**2022.9.25 version 0.2.0:**
 
 优化修改代码逻辑，支持自行添加vits模型，简单修复了一下有道翻译的翻译问题，启动时自动检测所需文件是否缺失
 
-**2022.9.21**:
-
-version 0.1.1:
+**2022.9.21 version 0.1.1:**
 
 修改依赖
-
 
