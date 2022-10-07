@@ -30,7 +30,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": "@机器人 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.2.2",
+        "version": "0.2.3",
     },
 )
 
@@ -94,6 +94,7 @@ async def voicHandler(
         _ = net_g_ms.eval()
         load_checkpoint(model_path / model_file, net_g_ms)
     except:
+        traceback.print_exc()
         await voice.finish("加载模型失败")
     text = get_text(text, hps_ms, cleaned=True)
     try:
@@ -113,6 +114,7 @@ async def voicHandler(
         traceback.print_exc()
         await voice.send("发送失败,请重试")
     except NetworkError:
+        traceback.print_exc()
         await voice.send("发送超时,也许等等就好了")
     finally:
         if auto_delete_voice:
