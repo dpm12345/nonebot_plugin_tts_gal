@@ -49,6 +49,6 @@
     "n_layers_q": 3,
     "use_spectral_norm": false
   },
-  "language": "ja"
+  "language": "ja",
   "symbols":["_", ",", ".", "!", "?", "-", "A", "E", "I", "N", "O", "Q", "U", "a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "m", "n", "o", "p", "r", "s", "t", "u", "v", "w", "y", "z", "\u0283", "\u02a7", "\u2193", "\u2191", " "]
 }
