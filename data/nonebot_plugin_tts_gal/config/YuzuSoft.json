@@ -30,6 +30,7 @@
       "use_spectral_norm": false,
       "gin_channels": 256
     },
+    "language": "ja",
     "speakers": ["\u7dbe\u5730\u5be7\u3005", "\u56e0\u5e61\u3081\u3050\u308b", "\u671d\u6b66\u82b3\u4e43", "\u5e38\u9678\u8309\u5b50", "\u30e0\u30e9\u30b5\u30e1", "\u978d\u99ac\u5c0f\u6625", "\u5728\u539f\u4e03\u6d77"],
     "symbols": ["_", ",", ".", "!", "?", "-", "A", "E", "I", "N", "O", "Q", "U", "a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "m", "n", "o", "p", "r", "s", "t", "u", "v", "w", "y", "z", "\u0283", "\u02a7", "\u2193", "\u2191", " "]
   }
