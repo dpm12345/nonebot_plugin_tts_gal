@@ -12,12 +12,16 @@
 </div>
 
 # 旧版本用户注意
-在0.2.0版本对代码进行了重构，主要是为了方便添加各种vits模型，具体用法可以查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+
+在0.3.0版本再次对代码进行了更改，支持添加部分中文VITS模型，也许可能会报错下面的关键错误，具体解决方案可以看可以查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+
+![图5](./images/nonebot_plugin_tts_gal_5.jpg)
+
+
 
 # 前言
 
 本人python比较菜，因此可能有些地方写的比较屎，还望轻喷
-
 
 # 安装之前
 
@@ -95,18 +99,13 @@ nb plugin install nonebot-plugin-tts-gal
 
 ## 资源文件
 
-下载`data`文件夹(主要是为了下载模型的配置文件)，并放入在bot的运行目录下
+`data`文件夹中的`nonebot_plugin_tts_gal`会存储与插件有关的文件
 
-下载model文件
+可以安装完插件后运行一次自动建立再退出
 
-[YuzuSoft_365_epochs.pth](https://sjtueducn-my.sharepoint.com/:u:/g/personal/cjang_cjengh_sjtu_edu_cn/EXTQrTj-UJpItH3BmgIUvhgBNZk88P1tT_7GPNr4yegNyw?e=5mcwgl)
+也可以按照该页面的`data`文件夹进行手动建立
 
-[ATRI_vits_900E_G_38000.pth](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
-找到pth文件
-
-最后将这两个pth文件放入到`data/nonebot_plugin_tts_gal/model/`下
-
-具体的模型命名方式请查看[Useage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+具体的资源下载示例请查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
 
 ## 相关依赖
 
@@ -134,22 +133,35 @@ apt-get install ffmpeg
 
 # 配置项
 
+<details>
+<summary>auto_delete_voice</summary> 
+该值的默认值为`true`,用于是否自动删除生成的语音文件
+
 请在使用的配置文件(.env.*)加入
 
 ```
 auto_delete_voice = true
 ```
 
-用于是否自动删除生成的语音文件，如不想删除，可改为
+如不想删除，可改为
 
 ```
 auto_delete_voice = false
 ```
 
+</details>
+
+<details>
+<summary>tts_gal</summary> 
+
+
+该配置项采用python的字典，其中键为元组，值为列表，具体代表含义及设置可以查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+
+</details>
 
 # 使用
 
-群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(会自动转为日文，故也可以输入中文)
+群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(根据配置文件中的`lang`会自动翻译为对应语言)
 
 ## 群聊
 
@@ -161,19 +173,7 @@ auto_delete_voice = false
 
 例如：宁宁说おはようございます.
 
-目前`name`有
-
-- 宁宁|绫地宁宁
-- 因幡爱瑠|爱瑠
-- 朝武芳乃|芳乃
-- 常陸茉子|茉子
-- 丛雨|幼刀
-- 鞍馬小春|鞍马小春|小春
-- 在原七海|七海
-- ATRI|atri|亚托莉
-
-**其他关于自定义的可以查看**[Usage.md文件](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
-
+**关于此方面自定义问题的可以查看**[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
 
 # 今后
 
@@ -205,11 +205,15 @@ auto_delete_voice = false
 # 感谢
 
 + 部分代码参考自[nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)
-
 + **[CjangCjengh](https://github.com/CjangCjengh/)**：g2p转换，适用于日语调形标注的符号文件及分享的[柚子社多人模型](https://github.com/CjangCjengh/TTSModels)
 + **[luoyily](https://github.com/luoyily)**：分享的[ATRI模型](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
 
 # 更新日志
+
+**2022.10.20 version 0.3.0：**
+
+支持添加中文模型，优化相关代码，增添更多提示
+
 **2022.10.7 version 0.2.3:**
 
 适配nonebot2-rc1版本，并添加部分报错信息提醒
