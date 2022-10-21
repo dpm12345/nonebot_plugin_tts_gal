@@ -22,7 +22,7 @@ async def checkFile(model_path,config_path,filenames):
             logger.info(f"配置文件{config_file}缺失")
 
 async def checkEnv(plugin_config):
-    if not plugin_config.auto_delete_voice:
+    if plugin_config.auto_delete_voice == None:
         logger.info("未配置auto_delete_voice项,将默认为true")
     if not plugin_config.tts_gal:
         logger.info("未配置tts_gal项,请根据模型及项目主页Usage.md指南进行配置")

@@ -30,7 +30,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": "@机器人 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.0",
+        "version": "0.3.1",
     },
 )
 
@@ -40,7 +40,7 @@ symbols_dict = {
 }
 
 plugin_config = Config.parse_obj(get_driver().config)
-auto_delete_voice = plugin_config.auto_delete_voice if plugin_config.auto_delete_voice else True
+auto_delete_voice = plugin_config.auto_delete_voice if not plugin_config.auto_delete_voice == None else True
 tts_gal = eval(plugin_config.tts_gal if plugin_config.tts_gal else '{():[""]}')
 driver = get_driver()
 
@@ -54,6 +54,7 @@ def _():
      for model in tts_gal.values() if not model[0] in filenames]
     logger.info("正在检查配置文件是否存在...")
     asyncio.ensure_future(checkFile(model_path, config_path, filenames))
+    logger.info("正在检查配置项...")
     asyncio.ensure_future(checkEnv(Config.parse_obj(get_driver().config)))
 
 voice = on_message(
