@@ -210,6 +210,10 @@ auto_delete_voice = false
 
 # 更新日志
 
+**2022.10.21 version 0.3.1：**
+
+修复对配置项auto_delete_voice的判断bug
+
 **2022.10.19 version 0.3.0：**
 
 支持添加中文模型，优化相关代码，增添更多提示
