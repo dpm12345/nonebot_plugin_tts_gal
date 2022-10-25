@@ -157,7 +157,7 @@ tts_gal = '{
 
 #### 修改模型配置文件
 
-打开`YuzuSoft.json`文件，由于该模型为日语模型，那么设置`"language": "js"`,配置文件中的`text_cleaners`和`symbols`均满足上述要求，可以不该
+打开`YuzuSoft.json`文件，由于该模型为日语模型，那么设置`"language": "ja"`,配置文件中的`text_cleaners`和`symbols`均满足上述要求，可以不该
 
 #### 修改机器人的配置文件
 
