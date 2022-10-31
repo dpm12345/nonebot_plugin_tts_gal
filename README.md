@@ -210,6 +210,10 @@ auto_delete_voice = false
 
 # 更新日志
 
+**2022.10.27 version 0.3.2：**
+
+修改正则表达式，避免文本出现"说/发送"而造成name的匹配错误
+
 **2022.10.21 version 0.3.1：**
 
 修复对配置项auto_delete_voice的判断bug
