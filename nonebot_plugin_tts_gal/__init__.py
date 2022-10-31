@@ -30,7 +30,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": "@机器人 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.1",
+        "version": "0.3.2",
     },
 )
 
@@ -58,7 +58,7 @@ def _():
     asyncio.ensure_future(checkEnv(Config.parse_obj(get_driver().config)))
 
 voice = on_message(
-    regex(r"(?P<name>\S+)(?:说|发送|说话)(?P<text>.*?)$"), block=False, priority=3)
+    regex(r"(?P<name>\S+?)(?:说|发送)(?P<text>.*?)$"), block=False, priority=3)
 
 
 @voice.handle()
