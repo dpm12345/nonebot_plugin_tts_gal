@@ -52,6 +52,13 @@ tts_gal = '{
 
 </details>
 
+<details>
+<summary>decibel(可选配置项)</summary> 
+
+于README.md已解释
+
+</details>
+
 ### 模型配置文件的要求
 
 模型配置文件至少需要保持下面格式
