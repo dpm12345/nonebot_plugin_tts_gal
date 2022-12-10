@@ -159,6 +159,15 @@ auto_delete_voice = false
 
 </details>
 
+<details>
+<summary>decibel(可选配置项)</summary> 
+
+该配置项用于设置生成语音的音量大小(由于原生成的音频对我来说比较大，因此通过此项来降低)
+
+可以不填，默认值为`-10`，负数为降低，正数为升高
+
+</details>
+
 # 使用
 
 群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(根据配置文件中的`lang`会自动翻译为对应语言)
@@ -209,6 +218,10 @@ auto_delete_voice = false
 + **[luoyily](https://github.com/luoyily)**：分享的[ATRI模型](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
 
 # 更新日志
+
+**2022.12.9 version 0.3.3：**
+
+自动读取已加载的角色模型，可通过[PicMenu插件](https://github.com/hamo-reid/nonebot_plugin_PicMenu)进行显示可使用的角色;对代码进行相关优化
 
 **2022.10.27 version 0.3.2：**
 
