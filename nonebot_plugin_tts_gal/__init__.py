@@ -1,5 +1,5 @@
 from pathlib import Path
-from nonebot import on_message, get_driver
+from nonebot import on_message, get_driver, on_command
 from nonebot.plugin import PluginMetadata
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent
@@ -30,7 +30,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": "@机器人 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.2",
+        "version": "0.3.3",
     },
 )
 
@@ -43,6 +43,7 @@ plugin_config = Config.parse_obj(get_driver().config)
 auto_delete_voice = plugin_config.auto_delete_voice if not plugin_config.auto_delete_voice == None else True
 tts_gal = eval(plugin_config.tts_gal if plugin_config.tts_gal else '{():[""]}')
 driver = get_driver()
+__valid_names__ = []
 
 
 @driver.on_startup
@@ -53,9 +54,10 @@ def _():
     [filenames.append(model[0])
      for model in tts_gal.values() if not model[0] in filenames]
     logger.info("正在检查配置文件是否存在...")
-    asyncio.ensure_future(checkFile(model_path, config_path, filenames))
+    asyncio.ensure_future(checkFile(model_path, config_path, filenames, tts_gal, __plugin_meta__, __valid_names__))
     logger.info("正在检查配置项...")
     asyncio.ensure_future(checkEnv(Config.parse_obj(get_driver().config)))
+
 
 voice = on_message(
     regex(r"(?P<name>\S+?)(?:说|发送)(?P<text>.*?)$"), block=False, priority=3)
@@ -68,7 +70,7 @@ async def voicHandler(
     text: str = RegexArg("text")
 ):
     # 预处理
-    config_file, model_file, index = check_character(name, tts_gal)
+    config_file, model_file, index = check_character(name, __valid_names__, tts_gal)
     if config_file == "":
         await voice.finish(MessageSegment.at(event.get_user_id()) + "暂时还未有该角色")
 
@@ -109,7 +111,7 @@ async def voicHandler(
             audio = net_g_ms.infer(x_tst, x_tst_lengths, sid=sid, noise_scale=.667,
                                    noise_scale_w=0.8, length_scale=1)[0][0, 0].data.cpu().float().numpy()
         write(voice_path / filename, hps_ms.data.sampling_rate, audio)
-        new_voice = Path(change_by_decibel(voice_path / filename, voice_path, -10))
+        new_voice = Path(change_by_decibel(voice_path / filename, voice_path, plugin_config.decibel))
     except:
         traceback.print_exc()
         await voice.finish('生成失败')
@@ -125,3 +127,5 @@ async def voicHandler(
     finally:
         if auto_delete_voice:
             os.remove(new_voice)
+
+

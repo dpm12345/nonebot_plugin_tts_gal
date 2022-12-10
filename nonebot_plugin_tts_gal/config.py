@@ -12,3 +12,4 @@ config_path = base_path / "config"
 class Config(BaseModel, extra=Extra.ignore):
     auto_delete_voice: Optional[bool] = None
     tts_gal: Optional[str] = None
+    decibel: int = -10
