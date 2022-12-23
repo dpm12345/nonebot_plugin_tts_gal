@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nonebot_plugin_tts_gal"
-version = "0.3.3"
-description = ""
+version = "0.3.6"
+description = "部分gal角色文本转语音"
 authors = ["dpm12345 <1006975692@qq.com>"]
 readme = "README.md"
 homepage = "https://github.com/dpm12345/nonebot_plugin_tts_gal"
@@ -23,6 +23,7 @@ jamo = "^0.4.1"
 scipy = "^1.5.2"
 pypinyin = "^0.47.0"
 jieba = "^0.42.1"
+httpx = "^0.23.1"
 
 
 [build-system]
