@@ -30,7 +30,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": "@机器人 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.3",
+        "version": "0.3.6",
     },
 )
 
