@@ -18,6 +18,7 @@ import pyopenjtalk
 from pypinyin import pinyin, lazy_pinyin, load_phrases_dict, Style
 from pypinyin.style._utils import get_finals, get_initials
 import jieba
+from janome.tokenizer import Tokenizer
 from ..cc_cedict_local import load as cc_cedict_local_load
 from ..kmandarin_8105_local import load as kmandarin_8105_local_load
 
@@ -81,6 +82,8 @@ _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in 
     ('ft', 'fort'),
 ]]
 
+# Tokenizer for Japanese
+tokenizer = Tokenizer()
 
 def expand_abbreviations(text):
     for regex, replacement in _abbreviations:
@@ -160,6 +163,28 @@ def japanese_cleaners(text):
 
 def japanese_cleaners2(text):
     return japanese_cleaners(text).replace('ts', 'ʦ')
+
+def japanese_tokenization_cleaners(text):
+  '''Pipeline for tokenizing Japanese text.'''
+  words = []
+  for token in tokenizer.tokenize(text):
+    if token.phonetic!='*':
+      words.append(token.phonetic)
+    else:
+      words.append(token.surface)
+  text = ''
+  for word in words:
+    if re.match(_japanese_characters, word):
+      if word[0] == '\u30fc':
+        continue
+      if len(text)>0:
+        text += ' '
+      text += pyopenjtalk.g2p(word, kana=False).replace(' ','')
+    else:
+      text += unidecode(word).replace(' ','')
+  if re.match('[A-Za-z]',text[-1]):
+    text += '.'
+  return text
 
 
 def chinese_cleaners(text):
