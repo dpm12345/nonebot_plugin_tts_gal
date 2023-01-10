@@ -1,36 +1,47 @@
-from pathlib import Path
-from nonebot import on_message, get_driver, on_command
+from nonebot import on_message, get_driver, on_regex
 from nonebot.plugin import PluginMetadata
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent
-
+from nonebot.exception import ActionFailed, NetworkError
 from nonebot.log import logger
+from nonebot.permission import SUPERUSER
+from nonebot.typing import T_State
+from nonebot import require
+require("nonebot_plugin_apscheduler")
+from nonebot_plugin_apscheduler import scheduler
 
+from pathlib import Path
 import hashlib
 import random
+import re
 import string
-from nonebot.exception import ActionFailed, NetworkError
-from .depends import *
-from .initial import *
-from .config import *
 from torch import no_grad, LongTensor
-from .utils import *
-from .models import SynthesizerTrn
-from .function import *
-from .text.symbols import symbols_ja, symbols_zh_CHS
 from scipy.io.wavfile import write
 import asyncio
 import traceback
 
+from .depends import *
+from .initial import *
+from .config import *
+from .utils import *
+from .models import SynthesizerTrn
+from .function import *
+from .text.symbols import symbols_ja, symbols_zh_CHS
+
 
 __plugin_meta__ = PluginMetadata(
-    name="gal角色语音",
-    description="部分gal角色文本转语音",
-    usage="触发方式：@机器人 [角色名][发送|说][文本内容]",
+    name="vits角色语音本地化",
+    description="部分语种的vits文本转角色语音",
+    usage=f"触发方式：{trigger_rule}[角色名][发送|说][文本内容]\n"+
+        "※超级用户管理(若设置前缀，以下均加上前缀)\n"+
+        "   [禁用翻译 xxx]   禁用xxx翻译项\n"+
+        "   [启用翻译 xxx]   启用xxx翻译项\n"+
+        "   [查看翻译]         查看目前可用的翻译项\n"+
+        "   [查看禁用翻译]  查看已被禁用的翻译项",
     extra={
-        "example": "@机器人 宁宁说おはようございます.",
+        "example": f"{trigger_rule} 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.6",
+        "version": "0.3.7",
     },
 )
 
@@ -39,11 +50,18 @@ symbols_dict = {
     "ja": symbols_ja
 }
 
-plugin_config = Config.parse_obj(get_driver().config)
-auto_delete_voice = plugin_config.auto_delete_voice if not plugin_config.auto_delete_voice == None else True
-tts_gal = eval(plugin_config.tts_gal if plugin_config.tts_gal else '{():[""]}')
+
+auto_delete_voice = tts_gal_config.auto_delete_voice
+tts_gal = eval(tts_gal_config.tts_gal)
+tran_type = tts_gal_config.tts_gal_tran_type
+prefix = tts_gal_config.tts_gal_prefix
+priority = tts_gal_config.tts_gal_priority
 driver = get_driver()
 __valid_names__ = []
+lock_tran_list = {
+    "auto":[],
+    "manual":[]
+}
 
 
 @driver.on_startup
@@ -56,12 +74,15 @@ def _():
     logger.info("正在检查配置文件是否存在...")
     asyncio.ensure_future(checkFile(model_path, config_path, filenames, tts_gal, __plugin_meta__, __valid_names__))
     logger.info("正在检查配置项...")
-    asyncio.ensure_future(checkEnv(Config.parse_obj(get_driver().config)))
+    asyncio.ensure_future(checkEnv(tts_gal_config, tran_type))
 
 
 voice = on_message(
-    regex(r"(?P<name>\S+?)(?:说|发送)(?P<text>.*?)$"), block=False, priority=3)
-
+    regex(rf"(?:{prefix} *)(?P<name>.+?)(?:说|发送)(?P<text>.+?)$"), block=False, priority=priority)
+lock_tran = on_regex(rf"(?:{prefix} *)禁用翻译(?: *)(?P<tran>.+)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
+unlock_tran = on_regex(rf"(?:{prefix} *)启用翻译(?: *)(?P<tran>.+)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
+show_trans = on_regex(rf"(?:{prefix} *)查看翻译(?: *)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
+show_lock_trans = on_regex(rf"(?:{prefix} *)查看禁用翻译(?: *)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
 
 @voice.handle()
 async def voicHandler(
@@ -85,7 +106,9 @@ async def voicHandler(
 
     # 文本处理
     text = changeE2C(text) if lang == "zh-CHS" else changeC2E(text)
-    text = await translate_youdao(text, lang)
+    text = await translate(tran_type, lock_tran_list, text, lang)
+    if not text:
+        await voice.finish("翻译文本时出错,请查看日志获取细节")
     text = get_text(text, hps_ms, symbols, lang, False)
 
     try:
@@ -111,7 +134,7 @@ async def voicHandler(
             audio = net_g_ms.infer(x_tst, x_tst_lengths, sid=sid, noise_scale=.667,
                                    noise_scale_w=0.8, length_scale=1)[0][0, 0].data.cpu().float().numpy()
         write(voice_path / filename, hps_ms.data.sampling_rate, audio)
-        new_voice = Path(change_by_decibel(voice_path / filename, voice_path, plugin_config.decibel))
+        new_voice = Path(change_by_decibel(voice_path / filename, voice_path, tts_gal_config.decibel))
     except:
         traceback.print_exc()
         await voice.finish('生成失败')
@@ -128,4 +151,51 @@ async def voicHandler(
         if auto_delete_voice:
             os.remove(new_voice)
 
+@lock_tran.handle()
+async def _(state:T_State):
+    tran = state["_matched_dict"]['tran']
+    if tran == "youdao":
+        await lock_tran.send(f"该翻译项禁止禁用!")
+    elif tran in tran_type:
+        lock_tran_list["manual"].extend([tran])
+        logger.info(f"禁用成功")
+        await lock_tran.send(f"禁用成功")
+    else:
+        await lock_tran.send(f"未有{tran}翻译项")
 
+@unlock_tran.handle()
+async def _(state:T_State):
+    tran = state["_matched_dict"]['tran']
+    if tran in lock_tran_list["auto"] or tran in lock_tran_list["manual"]:
+        if tran in lock_tran_list["auto"]:
+            lock_tran_list["auto"].remove(tran)
+        if tran in lock_tran_list["manual"]:
+            lock_tran_list["manual"].remove(tran)
+        logger.info(f"启用成功")
+        await lock_tran.send(f"启用成功")
+    else:
+        await lock_tran.send(f"{tran}翻译项未被禁用")
+
+
+
+@show_trans.handle()
+async def _():
+    present_trans = [tran for tran in tran_type if tran not in lock_tran_list["auto"] 
+                    and tran not in lock_tran_list["manual"]]
+    await show_trans.send(f"目前支持的翻译:{','.join(present_trans)}")
+
+@show_lock_trans.handle()
+async def _():
+    lock_list = lock_tran_list["auto"].copy()
+    lock_list.extend(lock_tran_list["manual"])
+    if len(lock_list) == 0:
+        await show_lock_trans.send("目前没有翻译项被禁用")
+    else:
+        await show_lock_trans.send(f"目前被禁用项{','.join(lock_list)}")
+
+# 每月重置自动禁用的翻译项
+@scheduler.scheduled_job("cron", day=1, minute=5, misfire_grace_time=60)
+async def reset_tran():
+    lock_tran_list["auto"].clear()
+    valid_tran_type = [tran for tran in tran_type if tran not in lock_tran_list["manual"]]
+    logger.info(f"目前可用翻译:{','.join(valid_tran_type)}")

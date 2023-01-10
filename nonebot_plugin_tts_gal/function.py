@@ -5,6 +5,8 @@ import hashlib
 import random
 import json
 import uuid
+import hmac
+import base64
 from ffmpy import FFmpeg
 import os
 from .text import text_to_sequence
@@ -12,6 +14,9 @@ from .commons import intersperse
 from torch import no_grad, LongTensor
 from .utils import *
 from nonebot.log import logger
+from .config import tts_gal_config
+from typing import List,Tuple,Dict
+from sys import maxsize
 
 
 def check_character(name, valid_names, tts_gal):
@@ -71,7 +76,11 @@ def changeE2C(s: str):
     return s.replace(".", "。").replace("?", "？").replace("!", "！").replace(",", "，")
 
 
-async def translate_youdao(text: str, lang: str) -> str:
+async def translate_youdao(text: str, lang: str) -> Tuple[str,bool]:
+    '''
+    return 翻译结果(str)，是否删除该项翻译(bool)
+    '''
+
     url = f"https://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
@@ -103,12 +112,167 @@ async def translate_youdao(text: str, lang: str) -> str:
         async with httpx.AsyncClient() as client:
             resp = await client.post(url, data=data, headers=headers)
             result = json.loads(resp.content)
+            if resp.status_code != 200:
+                logger.error(f"有道翻译错误代码 {resp.status_code},{resp.text}")
+                return "",False
         res = ""
         for s in result['translateResult'][0]:
             res += s['tgt']
-        return res
-    except:
-        return ""
+        return res,False
+    except Exception as e:
+        logger.error(f"有道翻译 {type(e)} {e}")
+        return "",False
+
+async def translate_baidu(text: str,  lang: str) -> Tuple[str,bool]:
+    '''
+    return 翻译结果(str)，是否删除该项翻译(bool)
+    '''
+    lang_change = {
+        "zh-CHS":"zh",
+        "ja":"jp",
+        "ko":"kor",
+        "fr":"fra",
+        "es":"spa",
+        "vi":"vie",
+        "ar":"ara"
+    }
+    if lang in lang_change.keys():
+        lang = lang_change[lang]
+    salt = str(round(time.time() * 1000))
+    appid = tts_gal_config.baidu_tran_appid
+    apikey = tts_gal_config.baidu_tran_apikey
+    sign_raw = appid + text + salt + apikey
+    sign = hashlib.md5(sign_raw.encode("utf8")).hexdigest()
+    params = {
+        "q": text,
+        "from": "auto",
+        "to": lang,
+        "appid": appid,
+        "salt": salt,
+        "sign": sign,
+    }
+    url = "https://fanyi-api.baidu.com/api/trans/vip/translate"
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, params=params)
+            result = resp.json()
+            status_code = resp.status_code
+            if status_code != 200:
+                logger.error(f"百度翻译错误代码 {resp.status_code},{resp.text}")
+                return "",False
+        if "error_code" in result.keys():
+            logger.error(f"百度翻译 {result['error_code']}:{result['error_msg']}")
+            if result['error_code'] == "54004":
+                return "",True
+            return "",False
+        return result["trans_result"][0]["dst"],False
+    except Exception as e:
+        logger.error(f"百度翻译 {type(e)} {e}")
+        return "",False
+
+async def translate_tencent(text:str, lang:str) -> Tuple[str,bool]:
+    '''
+    return 翻译结果(str)，是否删除该项翻译(bool)
+    '''
+    async def getSign(action: str, params: dict) -> str:
+        common = {
+            "Action": action,
+            "Region": tts_gal_config.tencent_tran_region,
+            "Timestamp": int(time.time()),
+            "Nonce": random.randint(1, maxsize),
+            "SecretId": tts_gal_config.tencent_tran_secretid,
+            "Version": "2018-03-21",
+        }
+        params.update(common)
+        sign_str = "POSTtmt.tencentcloudapi.com/?"
+        sign_str += "&".join("%s=%s" % (k, params[k]) for k in sorted(params))
+        secret_key = tts_gal_config.tencent_tran_secretkey
+        sign_str = bytes(sign_str, "utf-8")
+        secret_key = bytes(secret_key, "utf-8")
+        hashed = hmac.new(secret_key, sign_str, hashlib.sha1)
+        signature = base64.b64encode(hashed.digest())
+        signature = signature.decode()
+        return signature
+    async def LanguageDetect(text: str) -> Tuple[str,bool]:
+        url = "https://tmt.tencentcloudapi.com"
+        params = {
+            "Text": text,
+            "ProjectId": 0,
+        }
+        params["Signature"] = await getSign("LanguageDetect", params)
+        try:
+            async with httpx.AsyncClient() as client:
+                resp = await client.post(url, data=params)
+                status_code = resp.status_code
+                if status_code != 200:
+                    logger.error(f"腾讯语种识别错误代码 {resp.status_code},{resp.text}")
+                    return "",False
+                res = resp.json()["Response"]
+            if "Error" in res.keys():
+                logger.error(f"腾讯语种识别 {res['Error']['Code']} {res['Error']['Message']}")
+                if res['Error']['Code'] == "FailedOperation.NoFreeAmount" or \
+                    res['Error']['Code'] == "FailedOperation.ServiceIsolate":
+                    return "",True
+                return "",False
+            return res["Lang"],False
+        except Exception as e:
+            logger.error(f"腾讯语种识别 {type(e)} {e}")
+            return "",False
+
+    lang_change = {
+        "zh-CHS":"zh"
+    }
+    if lang in lang_change.keys():
+        lang = lang_change[lang]
+    source_lang, flag = await LanguageDetect(text)
+    if not source_lang:
+        return "",flag
+    if source_lang == lang:
+        return text,flag
+    url = "https://tmt.tencentcloudapi.com"
+    params = {
+        "Source": source_lang,
+        "SourceText": text,
+        "Target": lang,
+        "ProjectId": tts_gal_config.tencent_tran_projectid
+    }
+    params["Signature"] = await getSign("TextTranslate", params)
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(url, data=params)
+            status_code = resp.status_code
+            if status_code != 200:
+                logger.error(f"腾讯翻译错误代码 {resp.status_code},{resp.text}")
+                return "",False
+            res = resp.json()["Response"]
+        if "Error" in res.keys():
+            logger.error(f"腾讯翻译 {res['Error']['Code']} {res['Error']['Message']}")
+            if res['Error']['Code'] == "FailedOperation.NoFreeAmount" or \
+                res['Error']['Code'] == "FailedOperation.ServiceIsolate":
+                    return "",True
+            return "",False
+        return res["TargetText"],False
+    except Exception as e:
+        logger.error(f"腾讯翻译 {type(e)} {e}")
+        return "",False
+    
+
+support_tran = {
+    "youdao":translate_youdao,
+    "baidu":translate_baidu,
+    "tencent":translate_tencent
+}
+
+async def translate(tran_type:List[str], lock_tran_list:Dict[str,List[str]],text:str, lang:str) -> str:
+    for tran in tran_type:
+        if tran not in lock_tran_list["manual"] and tran not in lock_tran_list["auto"]:
+            res,flag = await support_tran[tran](text,lang)
+            if flag:
+                lock_tran_list["auto"].extend([tran])
+            if res:
+                break
+    return res
+
 
 
 def change_by_decibel(audio_path: str, output_dir: str, decibel):

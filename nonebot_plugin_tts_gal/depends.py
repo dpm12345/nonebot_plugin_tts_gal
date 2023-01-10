@@ -11,7 +11,7 @@ from nonebot.adapters.onebot.v11 import (
     MessageEvent,
     GroupMessageEvent,
 )
-
+from .config import tts_gal_config
 
 REGEX_DICT = "REGEX_DICT"
 REGEX_ARG = "REGEX_ARG"
@@ -19,7 +19,7 @@ REGEX_ARG = "REGEX_ARG"
 
 def regex(pattern: str) -> Rule:
     def checker(event: MessageEvent, state: T_State) -> bool:
-        if isinstance(event,GroupMessageEvent) and not event.is_tome():
+        if isinstance(event, GroupMessageEvent) and tts_gal_config.tts_gal_is_at and not event.is_tome():
             return False
         msg = event.get_message()
         msg_seg: MessageSegment = msg[0]
@@ -32,7 +32,7 @@ def regex(pattern: str) -> Rule:
             return False
 
         new_msg = msg.copy()
-        seg_text = seg_text[matched.end() :].lstrip()
+        seg_text = seg_text[matched.end():].lstrip()
         if seg_text:
             new_msg[0].data["text"] = seg_text
         else:
