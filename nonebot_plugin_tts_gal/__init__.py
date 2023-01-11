@@ -67,7 +67,7 @@ lock_tran_list = {
 @driver.on_startup
 def _():
     logger.info("正在检查目录是否存在...")
-    asyncio.ensure_future(checkDir(data_path, base_path, voice_path))
+    asyncio.ensure_future(checkDir(data_path, base_path, voice_path, model_path, config_path))
     filenames = []
     [filenames.append(model[0])
      for model in tts_gal.values() if not model[0] in filenames]
