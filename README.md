@@ -57,7 +57,7 @@ vits的nonebot的本地化插件，使用已训练好的模型，按照配置要
 
 也可以按照该页面的`data`文件夹进行手动建立
 
-具体的资源下载示例请查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+具体的资源下载示例请查看[例子示例](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md#%E4%BE%8B%E5%AD%90%E7%A4%BA%E4%BE%8B)
 
 ## 💻 相关依赖
 
