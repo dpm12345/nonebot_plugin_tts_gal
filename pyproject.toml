@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nonebot_plugin_tts_gal"
 version = "0.3.7"
-description = "部分语种的vits文本转角色语音"
+description = "基于nonebot2和vits的本地化角色语音合成插件"
 authors = ["dpm12345 <1006975692@qq.com>"]
 readme = "README.md"
 homepage = "https://github.com/dpm12345/nonebot_plugin_tts_gal"
