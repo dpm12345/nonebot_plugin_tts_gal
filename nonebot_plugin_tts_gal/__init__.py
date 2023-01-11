@@ -30,8 +30,8 @@ from .text.symbols import symbols_ja, symbols_zh_CHS
 
 
 __plugin_meta__ = PluginMetadata(
-    name="vits角色语音本地化",
-    description="部分语种的vits文本转角色语音",
+    name="vits角色语音合成本地化",
+    description="基于nonebot2和vits的本地化角色语音合成插件",
     usage=f"触发方式：{trigger_rule}[角色名][发送|说][文本内容]\n"+
         "※超级用户管理(若设置前缀，以下均加上前缀)\n"+
         "   [禁用翻译 xxx]   禁用xxx翻译项\n"+
