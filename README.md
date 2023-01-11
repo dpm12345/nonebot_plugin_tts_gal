@@ -5,41 +5,146 @@
 
 <div align="center">
 
-# nonebot_plugin_tts_gal
+# nonebot-plugin-tts-gal
 
-基于nonebot和vits的部分gal角色的语音合成插件
+_✨ [Nonebot2](https://github.com/nonebot/nonebot2) 基于nonebot2和vits的本地化角色语音合成插件 ✨_
+
+<p align="center">
+  <a href="https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/dpm12345/nonebot_plugin_tts_gal.svg" alt="license">
+  </a>
+  <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python">
+  <img src="https://img.shields.io/badge/nonebot-2.0.0b4+-red.svg" alt="NoneBot">
+  <a href="https://pypi.org/project/nonebot-plugin-tts-gal">
+    <img src="https://badgen.net/pypi/v/nonebot-plugin-tts-gal" alt="pypi">
+  </a>
+</p>
 
 </div>
 
-# 旧版本用户注意
+## 💬 前言
 
-在0.3.0版本再次对代码进行了更改，支持添加部分中文VITS模型，也许可能会报错下面的关键错误，具体解决方案可以看可以查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+平时因为学业问题，有时可能会回复得比较慢，请见谅。
 
-![图5](./images/nonebot_plugin_tts_gal_5.jpg)
+## 📖 介绍
 
+vits的nonebot的本地化插件，使用已训练好的模型，按照配置要求，使机器人发送文本对应的语音
 
+(**PS: 语音生成比较吃配置，生成过程花费时间可能会比较长，且大文本量会占用较大内存，过大会导致机器人进程 killed ，请留意**)
 
-# 前言
-
-本人python比较菜，因此可能有些地方写的比较屎，还望轻喷
-
-# 安装之前
+## 💿 安装
 
 <details>
-<summary>关于安装pyopenjtalk的问题</summary> 
+<summary>nb-cli安装</summary>
+在 nonebot2 项目的根目录下打开命令行, 输入以下指令即可安装
+
+    nb plugin install nonebot-plugin-tts-gal
+
+</details>
+
+<details>
+<summary>pip安装</summary>
+
+    pip install nonebot_plugin_tts_gal
+
+</details>
+
+## 🍰 资源文件
+
+`data`文件夹中的`nonebot_plugin_tts_gal`会存储与插件有关的文件
+
+可以安装完插件后运行一次自动建立再退出
+
+也可以按照该页面的`data`文件夹进行手动建立
+
+具体的资源下载示例请查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
+
+## 💻 相关依赖
+
+<details>
+<summary>ffmpeg的安装</summary> 
+
+**Windows**
+
+在ffmpeg官网[下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
+
+其他具体细节可自行搜索
+
+**Linux**
+
+Ubuntu下
+
+```
+apt-get install ffmpeg
+```
+
+或者下载源码安装(具体可搜索相关教程)
+
+</details>
+
+## ⚙️ 配置
+
+| 配置项  | 必填 | 类型 | 默认值 |  说明  |
+| :-----: | :--: | :----: | :----: | :-----: |
+| tts_gal |  是  | Dict[Tuble[str],List[str]] | {():[""]} | 生成指定角色语音的关键配置，具体可见[tts_gal的配置要求](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md#%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%A6%81%E6%B1%82) |
+| auto_delete_voice | 否 | Bool | True | 是否自动删除生成语音，`True`为是，`False`为否<br>(配置文件中请填`true`或`false`) |
+| decibel | 否 | int | -10 | 发送语音相对生成的分贝数<br>(原生成的音频音量可能比较大，因此通过此项来降低，负数为降，整数位升) |
+| tts_gal_is_at | 否 | Bool | True | 使用该功能是否需要@机器人，<br>(若填写，填`true`或`false`) |
+| tts_gal_prefix | 否 | str | ""(空) | 使用该插件时的触发匹配前缀，减少冲突 |
+| tts_gal_priority | 否 | int | 3 | 该插件的优先级大小 |
+| tts_gal_tran_type | 否 | List[str] | ["youdao"] | 文本翻译使用项，默认为有道翻译("youdao")，可支持百度翻译("baidu")和腾讯翻译("tencent")，填写顺序为翻译调用优先级，若填写百度和腾讯翻译后需填写对应的配置项 |
+| baidu_tran_appid | 否 | str | ""(空) | 百度翻译接口对应的appid，可在[百度翻译控制台](https://fanyi-api.baidu.com/manage/developer)获取 |
+| baidu_tran_apikey | 否 | str | ""(空) | 百度翻译接口对应的apikey，可在[百度翻译控制台](https://fanyi-api.baidu.com/manage/developer)获取 |
+| tencent_tran_region | 否 | str | "ap-shanghai" | 腾讯翻译接口对应的地域，可在[地域列表](https://cloud.tencent.com/document/api/551/15615#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8)获取 |
+| tencent_tran_secretid | 否 | str | ""(空) | 腾讯翻译接口对应secretid，可在[云API密钥](https://console.cloud.tencent.com/capi)获取 |
+| tencent_tran_secretkey | 否 | str | ""(空) | 腾讯翻译接口对应secretkey，可在[云API密钥](https://console.cloud.tencent.com/capi)获取 |
+| tencent_tran_projectid | 否 | int | 0 | 腾讯翻译接口对应projectid，该项可以根据控制台-账号中心-项目管理中的配置填写，如无配置请填写默认项目ID:0或不填 |
 
 
-如果先前已经安装了pyopenjtalk，该内容可以直接忽略
+## 🎉 使用
+
+群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(根据模型配置文件中的`language`会自动翻译为对应语言)
+
+| 指令 | 可使用者 |  说明   |
+| :---: | :----: | :-----: |
+| [name]说[text]<br>或<br>[name]发送[text] | 所有人 | 生成语音，<br>若配置了`tts_gal_is_at`为`true`和`tts_gal_prefix`不为空，<br>那么分别要@机器人和在`name`前添加配置的前缀，<br>如设置前缀`tts`，那么使用时为 tts[name]说[text] |
+| 禁用翻译 xxx | 超级用户(SUPERUSER) | 禁用名为xxx的翻译项，在启用前都不会使用xxx的翻译 |
+| 启用翻译 xxx | 超级用户(SUPERUSER) | 启用名为xxx的翻译项，将会使用xxx的翻译(按原来配置设置的优先级) |
+| 查看翻译 | 超级用户(SUPERUSER) | 查看插件目前调用的翻译项 |
+| 查看禁用翻译 | 超级用户(SUPERUSER) | 查看插件目前禁用的翻译项 |
+
+例如：
++ 宁宁说おはようございます.
++ 禁用翻译 baidu
++ 启用翻译 baidu
++ 查看翻译
++ 查看禁用翻译
+
+## ✏️ 今后
+
+添加更多的模型
+
+添加更多的翻译选项
+
+
+## ❔ Q&A
+
+<details>
+<summary>安装pyopenjtalk</summary> 
+
+如果出现如下错误
+
+<img src="./images/nonebot_plugin_tts_gal_3.jpg" alt="图3" style="zoom:80%;" />
 
 可能由于缺少cmake和MSVC造成的，需要在本机安装
-
-如果你不清楚自己有没有，可以先尝试安装，如果出现了以上报错，可以再回来阅读一下解决方案
 
 ## Windows
 
 ### 第一步 安装Visual Studio
 
-在Visual Studio的官网下载安装器,[VS2022点击此处下载](https://visualstudio.microsoft.com/zh-hans/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=2030&passive=false)
+在Visual Studio的官网下载安装器,[VS2022点击此处下载](https://visualstudio.microsoft.com/zh-hans/free-developer-offers/)
+
+下载社区版，即`Visual Studio Community`
 
 ### 第二步 下载相关工具
 
@@ -81,127 +186,6 @@ sudo apt install cmake
 安装好后便可安装pyopenjtalk
 </details>
 
-# 安装
-
-pip安装
-
-```
-pip install nonebot_plugin_tts_gal
-```
-
-nb-cli安装
-
-```
-nb plugin install nonebot-plugin-tts-gal
-```
-
-
-
-## 资源文件
-
-`data`文件夹中的`nonebot_plugin_tts_gal`会存储与插件有关的文件
-
-可以安装完插件后运行一次自动建立再退出
-
-也可以按照该页面的`data`文件夹进行手动建立
-
-具体的资源下载示例请查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
-
-## 相关依赖
-
-<details>
-<summary>ffmpeg的安装</summary> 
-
-
-**Windows**
-
-在ffmpeg官网[下载](https://github.com/BtbN/FFmpeg-Builds/releases),选择对应的版本，下载后解压，并将位于`bin`目录添加到环境变量中
-
-其他具体细节可自行搜索
-
-**Linux**
-
-Ubuntu下
-
-```
-apt-get install ffmpeg
-```
-
-或者下载源码安装(具体可搜索相关教程)
-
-</details>
-
-# 配置项
-
-<details>
-<summary>auto_delete_voice</summary> 
-该值的默认值为`true`,用于是否自动删除生成的语音文件
-
-请在使用的配置文件(.env.*)加入
-
-```
-auto_delete_voice = true
-```
-
-如不想删除，可改为
-
-```
-auto_delete_voice = false
-```
-
-</details>
-
-<details>
-<summary>tts_gal</summary> 
-
-
-该配置项采用python的字典，其中键为元组，值为列表，具体代表含义及设置可以查看[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
-
-</details>
-
-<details>
-<summary>decibel(可选配置项)</summary> 
-
-该配置项用于设置生成语音的音量大小(由于原生成的音频对我来说比较大，因此通过此项来降低)
-
-可以不填，默认值为`-10`，负数为降低，正数为升高
-
-</details>
-
-# 使用
-
-群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(根据配置文件中的`lang`会自动翻译为对应语言)
-
-## 群聊
-
-`@机器人 [name]说[text]`
-
-## 私聊
-
-`[name]说[text]`
-
-例如：宁宁说おはようございます.
-
-**关于此方面自定义问题的可以查看**[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md)
-
-# 今后
-
-添加更多的模型
-
-添加更多的翻译选项
-
-
-# Q&A
-
-<details>
-<summary>安装pyopenjtalk</summary> 
-
-如果出现如下错误
-
-<img src="./images/nonebot_plugin_tts_gal_3.jpg" alt="图3" style="zoom:80%;" />
-
-请参考上面的安装之前的说明
-
 </details>
 
 <details>
@@ -211,13 +195,13 @@ auto_delete_voice = false
 
 </details>
 
-# 感谢
+## 💡 鸣谢
 
 + 部分代码参考自[nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)
 + **[CjangCjengh](https://github.com/CjangCjengh/)**：g2p转换，适用于日语调形标注的符号文件及分享的[柚子社多人模型](https://github.com/CjangCjengh/TTSModels)
 + **[luoyily](https://github.com/luoyily)**：分享的[ATRI模型](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
 
-# 更新日志
+## 📝 更新日志
 
 **2022.12.9 version 0.3.3：**
 
