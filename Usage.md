@@ -4,32 +4,39 @@
 
 在0.3.0版本中，增加了对中文模型的支持，为了兼容之前版本，正常使用翻译，在模型配置文件中需要加上`language`项,并且需要关注`text_cleaners`这一项内容，具体可以看[模型配置文件的要求](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md#模型配置文件的要求)
 
+
+
+## 功能解释
+
+1. 生成语音功能。[name]说|发送[text]
+
+   当`name`前有若干个空格时，同样也会触发
+
+   `text`的长度至少为1
+
+   当配置项`tts_gal_is_at`为`true`时，使用该功能需要**@机器人**
+
+   当配置项`tts_gal_prefix`不为空时，使用该功能需要加上前缀，如`tts_gal_prefix = "tts"`，使用时`tts 宁宁说早上好。`
+
+2. 翻译的调用
+
+   1. 优先级：配置项的翻译项排列顺序决定了优先级，如`["baidu","tencent","youdao"]`，将会优先调用百度翻译，当翻译失败会自行调用腾讯翻译，失败后顺次往下
+
+   2. 自动禁用翻译项：当翻译api返回余额不足、欠费等相关错误码时，会自动将该翻译项禁用，之后的翻译也不会调用，直到下个月第一天的00:05:00自动解禁
+
+      (注:请自行注意使用api的使用量，及时处理)
+
+   3. 手动禁用：可以使用`禁用 xxx`来禁用某一翻译项，禁用后，不会再调用该翻译项，月初也不会自动解禁，只能通过手动`启用翻译 xxx`来进行解禁
+
+   4. 默认为调用`youdao`，且该翻译项不允许禁用
+
 ## 各类配置文件的配置
 
 ### 机器人配置文件要求
 
 机器人配置文件为`.env.*`，其中`*`为`.env`中`ENVIRONMENT`配置项的值
 
-这里需要配置两个配置项
-
-<details>
-<summary>auto_delete_voice</summary> 
-
-该值的默认值为`true`,用于是否自动删除生成的语音文件
-
-请在使用的配置文件(.env.*)加入
-
-```
-auto_delete_voice = true
-```
-
-如不想删除，可改为
-
-```
-auto_delete_voice = false
-```
-
-</details>
+这里至少需要配置`tts_gal`
 
 <details>
 <summary>tts_gal</summary> 
@@ -48,16 +55,9 @@ tts_gal = '{
 }'
 ```
 
-
-
 </details>
 
-<details>
-<summary>decibel(可选配置项)</summary> 
-
-于README.md已解释
-
-</details>
+其他配置项按需要根据[README.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/README.md#配置)选填
 
 ### 模型配置文件的要求
 
@@ -77,7 +77,7 @@ tts_gal = '{
     "filter_length": 1024,
     "hop_length": 256,
     "add_blank": true,
-    "n_speakers": 0
+    "n_speakers": 0,
     ......
   },
   "model": {
@@ -108,9 +108,10 @@ tts_gal = '{
 
 + japanese_cleaners
 + japanese_cleaners2
++ japanese_tokenization_cleaners
 + chinese_cleaners2
 
-在导入配置文件时请注意该项的值
+在导入配置文件时请注意该项的值，按需选择
 
 #### 关于language
 
@@ -164,13 +165,13 @@ tts_gal = '{
 
 #### 修改模型配置文件
 
-打开`YuzuSoft.json`文件，由于该模型为日语模型，那么设置`"language": "ja"`,配置文件中的`text_cleaners`和`symbols`均满足上述要求，可以不该
+打开`YuzuSoft.json`文件，由于该模型为日语模型，那么设置`"language": "ja"`,配置文件中的`text_cleaners`和`symbols`均满足上述要求，可以不改
 
 #### 修改机器人的配置文件
 
 找到机器人的使用配置文件`.env.*`
 
-根据模型作者，提供信息在文件中添入以下内容
+根据模型作者提供的信息，在文件中添入以下内容
 
 ```
 tts_gal = '{
