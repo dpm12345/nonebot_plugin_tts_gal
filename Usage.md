@@ -57,7 +57,7 @@ tts_gal = '{
 
 </details>
 
-其他配置项按需要根据[README.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/README.md#配置)选填
+其他配置项按需要根据[README.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/README.md#%EF%B8%8F-配置)选填
 
 ### 模型配置文件的要求
 
