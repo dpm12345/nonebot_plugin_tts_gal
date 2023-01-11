@@ -103,7 +103,7 @@ apt-get install ffmpeg
 
 ## 🎉 使用
 
-群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(根据模型配置文件中的`language`会自动翻译为对应语言)
+群聊和私聊仅有细微差别，其中下面语句中，`name`为合成语音的角色，`text`为转语音的文本内容(根据模型配置文件中的`language`会自动翻译为对应语言)，具体的相关功能解释可查看[这里](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md#%E5%8A%9F%E8%83%BD%E8%A7%A3%E9%87%8A)
 
 | 指令 | 可使用者 |  说明   |
 | :---: | :----: | :-----: |
@@ -202,6 +202,10 @@ sudo apt install cmake
 + **[luoyily](https://github.com/luoyily)**：分享的[ATRI模型](https://pan.baidu.com/s/1_vhOx50OE5R4bE02ZMe9GA?pwd=9jo4)
 
 ## 📝 更新日志
+
+**2023.1.1 version 0.3.7：**
+
+支持百度翻译和腾讯翻译的api使用，增加是否需要@机器人、自定义前缀、自定义插件priority等配置
 
 **2022.12.9 version 0.3.3：**
 
