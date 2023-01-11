@@ -11,13 +11,13 @@ config_path = base_path / "config"
 
 
 class Config(BaseModel, extra=Extra.ignore):
-    auto_delete_voice: bool = True
     tts_gal: str = '{():[""]}'
+    auto_delete_voice: bool = True
     decibel: int = -10
-    tts_gal_tran_type: List[str] = ["youdao"]
     tts_gal_is_at: bool = True
     tts_gal_prefix: str = ""
     tts_gal_priority: int = 3
+    tts_gal_tran_type: List[str] = ["youdao"]
     baidu_tran_appid: str = ""
     baidu_tran_apikey: str = ""
     tencent_tran_region: str = "ap-shanghai"
