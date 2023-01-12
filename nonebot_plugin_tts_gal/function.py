@@ -15,7 +15,7 @@ from torch import no_grad, LongTensor
 from .utils import *
 from nonebot.log import logger
 from .config import tts_gal_config
-from typing import List,Tuple,Dict
+from typing import List, Tuple, Dict
 from sys import maxsize
 
 
@@ -24,7 +24,10 @@ def check_character(name, valid_names, tts_gal):
     config_file = ""
     model_file = ""
     for names, model in tts_gal.items():
-        if names in valid_names and ((isinstance(names,str) and names == name) or name in names):
+        print(names, type(names))
+        if names in valid_names and \
+                ((isinstance(names, str) and names == name) or
+                 ((isinstance(names, tuple) and name in names))):
             config_file = model[0] + ".json"
             model_file = model[0] + ".pth"
             index = None if len(model) == 1 else int(model[1])
@@ -76,7 +79,7 @@ def changeE2C(s: str):
     return s.replace(".", "。").replace("?", "？").replace("!", "！").replace(",", "，")
 
 
-async def translate_youdao(text: str, lang: str) -> Tuple[str,bool]:
+async def translate_youdao(text: str, lang: str) -> Tuple[str, bool]:
     '''
     return 翻译结果(str)，是否删除该项翻译(bool)
     '''
@@ -114,27 +117,28 @@ async def translate_youdao(text: str, lang: str) -> Tuple[str,bool]:
             result = json.loads(resp.content)
             if resp.status_code != 200:
                 logger.error(f"有道翻译错误代码 {resp.status_code},{resp.text}")
-                return "",False
+                return "", False
         res = ""
         for s in result['translateResult'][0]:
             res += s['tgt']
-        return res,False
+        return res, False
     except Exception as e:
         logger.error(f"有道翻译 {type(e)} {e}")
-        return "",False
+        return "", False
 
-async def translate_baidu(text: str,  lang: str) -> Tuple[str,bool]:
+
+async def translate_baidu(text: str,  lang: str) -> Tuple[str, bool]:
     '''
     return 翻译结果(str)，是否删除该项翻译(bool)
     '''
     lang_change = {
-        "zh-CHS":"zh",
-        "ja":"jp",
-        "ko":"kor",
-        "fr":"fra",
-        "es":"spa",
-        "vi":"vie",
-        "ar":"ara"
+        "zh-CHS": "zh",
+        "ja": "jp",
+        "ko": "kor",
+        "fr": "fra",
+        "es": "spa",
+        "vi": "vie",
+        "ar": "ara"
     }
     if lang in lang_change.keys():
         lang = lang_change[lang]
@@ -159,18 +163,19 @@ async def translate_baidu(text: str,  lang: str) -> Tuple[str,bool]:
             status_code = resp.status_code
             if status_code != 200:
                 logger.error(f"百度翻译错误代码 {resp.status_code},{resp.text}")
-                return "",False
+                return "", False
         if "error_code" in result.keys():
             logger.error(f"百度翻译 {result['error_code']}:{result['error_msg']}")
             if result['error_code'] == "54004":
-                return "",True
-            return "",False
-        return result["trans_result"][0]["dst"],False
+                return "", True
+            return "", False
+        return result["trans_result"][0]["dst"], False
     except Exception as e:
         logger.error(f"百度翻译 {type(e)} {e}")
-        return "",False
+        return "", False
 
-async def translate_tencent(text:str, lang:str) -> Tuple[str,bool]:
+
+async def translate_tencent(text: str, lang: str) -> Tuple[str, bool]:
     '''
     return 翻译结果(str)，是否删除该项翻译(bool)
     '''
@@ -193,7 +198,8 @@ async def translate_tencent(text:str, lang:str) -> Tuple[str,bool]:
         signature = base64.b64encode(hashed.digest())
         signature = signature.decode()
         return signature
-    async def LanguageDetect(text: str) -> Tuple[str,bool]:
+
+    async def LanguageDetect(text: str) -> Tuple[str, bool]:
         url = "https://tmt.tencentcloudapi.com"
         params = {
             "Text": text,
@@ -206,29 +212,29 @@ async def translate_tencent(text:str, lang:str) -> Tuple[str,bool]:
                 status_code = resp.status_code
                 if status_code != 200:
                     logger.error(f"腾讯语种识别错误代码 {resp.status_code},{resp.text}")
-                    return "",False
+                    return "", False
                 res = resp.json()["Response"]
             if "Error" in res.keys():
                 logger.error(f"腾讯语种识别 {res['Error']['Code']} {res['Error']['Message']}")
                 if res['Error']['Code'] == "FailedOperation.NoFreeAmount" or \
-                    res['Error']['Code'] == "FailedOperation.ServiceIsolate":
-                    return "",True
-                return "",False
-            return res["Lang"],False
+                        res['Error']['Code'] == "FailedOperation.ServiceIsolate":
+                    return "", True
+                return "", False
+            return res["Lang"], False
         except Exception as e:
             logger.error(f"腾讯语种识别 {type(e)} {e}")
-            return "",False
+            return "", False
 
     lang_change = {
-        "zh-CHS":"zh"
+        "zh-CHS": "zh"
     }
     if lang in lang_change.keys():
         lang = lang_change[lang]
     source_lang, flag = await LanguageDetect(text)
     if not source_lang:
-        return "",flag
+        return "", flag
     if source_lang == lang:
-        return text,flag
+        return text, flag
     url = "https://tmt.tencentcloudapi.com"
     params = {
         "Source": source_lang,
@@ -243,36 +249,36 @@ async def translate_tencent(text:str, lang:str) -> Tuple[str,bool]:
             status_code = resp.status_code
             if status_code != 200:
                 logger.error(f"腾讯翻译错误代码 {resp.status_code},{resp.text}")
-                return "",False
+                return "", False
             res = resp.json()["Response"]
         if "Error" in res.keys():
             logger.error(f"腾讯翻译 {res['Error']['Code']} {res['Error']['Message']}")
             if res['Error']['Code'] == "FailedOperation.NoFreeAmount" or \
-                res['Error']['Code'] == "FailedOperation.ServiceIsolate":
-                    return "",True
-            return "",False
-        return res["TargetText"],False
+                    res['Error']['Code'] == "FailedOperation.ServiceIsolate":
+                return "", True
+            return "", False
+        return res["TargetText"], False
     except Exception as e:
         logger.error(f"腾讯翻译 {type(e)} {e}")
-        return "",False
-    
+        return "", False
+
 
 support_tran = {
-    "youdao":translate_youdao,
-    "baidu":translate_baidu,
-    "tencent":translate_tencent
+    "youdao": translate_youdao,
+    "baidu": translate_baidu,
+    "tencent": translate_tencent
 }
 
-async def translate(tran_type:List[str], lock_tran_list:Dict[str,List[str]],text:str, lang:str) -> str:
+
+async def translate(tran_type: List[str], lock_tran_list: Dict[str, List[str]], text: str, lang: str) -> str:
     for tran in tran_type:
         if tran not in lock_tran_list["manual"] and tran not in lock_tran_list["auto"]:
-            res,flag = await support_tran[tran](text,lang)
+            res, flag = await support_tran[tran](text, lang)
             if flag:
                 lock_tran_list["auto"].extend([tran])
             if res:
                 break
     return res
-
 
 
 def change_by_decibel(audio_path: str, output_dir: str, decibel):

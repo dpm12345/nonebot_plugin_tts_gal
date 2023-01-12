@@ -1,4 +1,4 @@
-from nonebot import on_message, get_driver, on_regex
+from nonebot import on_message, get_driver
 from nonebot.plugin import PluginMetadata
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent
@@ -79,10 +79,10 @@ def _():
 
 voice = on_message(
     regex(rf"(?:{prefix} *)(?P<name>.+?)(?:说|发送)(?P<text>.+?)$"), block=False, priority=priority)
-lock_tran = on_regex(rf"(?:{prefix} *)禁用翻译(?: *)(?P<tran>.+)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
-unlock_tran = on_regex(rf"(?:{prefix} *)启用翻译(?: *)(?P<tran>.+)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
-show_trans = on_regex(rf"(?:{prefix} *)查看翻译(?: *)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
-show_lock_trans = on_regex(rf"(?:{prefix} *)查看禁用翻译(?: *)$",flags=re.I,permission=SUPERUSER,block=False,priority=priority)
+lock_tran = on_message(regex(rf"(?:{prefix} *)禁用翻译(?: *)(?P<tran>.+)$"), permission=SUPERUSER,block=False,priority=priority)
+unlock_tran = on_message(regex(rf"(?:{prefix} *)启用翻译(?: *)(?P<tran>.+)$"), permission=SUPERUSER,block=False,priority=priority)
+show_trans = on_message(regex(rf"(?:{prefix} *)查看翻译(?: *)$"), permission=SUPERUSER,block=False,priority=priority)
+show_lock_trans = on_message(regex(rf"(?:{prefix} *)查看禁用翻译(?: *)$"), permission=SUPERUSER,block=False,priority=priority)
 
 @voice.handle()
 async def voicHandler(
@@ -152,8 +152,7 @@ async def voicHandler(
             os.remove(new_voice)
 
 @lock_tran.handle()
-async def _(state:T_State):
-    tran = state["_matched_dict"]['tran']
+async def _(tran: str = RegexArg("tran")):
     if tran == "youdao":
         await lock_tran.send(f"该翻译项禁止禁用!")
     elif tran in tran_type:
@@ -164,8 +163,7 @@ async def _(state:T_State):
         await lock_tran.send(f"未有{tran}翻译项")
 
 @unlock_tran.handle()
-async def _(state:T_State):
-    tran = state["_matched_dict"]['tran']
+async def _(tran: str = RegexArg("tran")):
     if tran in lock_tran_list["auto"] or tran in lock_tran_list["manual"]:
         if tran in lock_tran_list["auto"]:
             lock_tran_list["auto"].remove(tran)
