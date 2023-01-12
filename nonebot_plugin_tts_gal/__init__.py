@@ -41,7 +41,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": f"{trigger_rule} 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.7",
+        "version": "0.3.8",
     },
 )
 
