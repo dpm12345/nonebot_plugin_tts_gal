@@ -14,7 +14,7 @@
 
    `text`的长度至少为1
 
-   当配置项`tts_gal_is_at`为`true`时，使用该功能需要**@机器人**
+   当配置项`tts_gal_is_at`为`true`时，使用该功能需要@机器人
 
    当配置项`tts_gal_prefix`不为空时，使用该功能需要加上前缀，如`tts_gal_prefix = "tts"`，使用时`tts 宁宁说早上好。`
 
