@@ -5,7 +5,6 @@ from nonebot.adapters.onebot.v11 import Bot, MessageEvent
 from nonebot.exception import ActionFailed, NetworkError
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
-from nonebot.typing import T_State
 from nonebot import require
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler
