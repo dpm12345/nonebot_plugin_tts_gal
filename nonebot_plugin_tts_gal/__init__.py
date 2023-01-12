@@ -34,10 +34,10 @@ __plugin_meta__ = PluginMetadata(
     description="基于nonebot2和vits的本地化角色语音合成插件",
     usage=f"触发方式：{trigger_rule}[角色名][发送|说][文本内容]\n"+
         "※超级用户管理(若设置前缀，以下均加上前缀)\n"+
-        "   [禁用翻译 xxx]   禁用xxx翻译项\n"+
-        "   [启用翻译 xxx]   启用xxx翻译项\n"+
-        "   [查看翻译]         查看目前可用的翻译项\n"+
-        "   [查看禁用翻译]  查看已被禁用的翻译项",
+        f"   {trigger_rule}[禁用翻译 xxx]   禁用xxx翻译项\n"+
+        f"   {trigger_rule}[启用翻译 xxx]   启用xxx翻译项\n"+
+        f"   {trigger_rule}[查看翻译]         查看目前可用的翻译项\n"+
+        f"   {trigger_rule}[查看禁用翻译]  查看已被禁用的翻译项",
     extra={
         "example": f"{trigger_rule} 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
