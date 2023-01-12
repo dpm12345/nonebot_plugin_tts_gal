@@ -156,7 +156,8 @@ async def _(tran: str = RegexArg("tran")):
     if tran == "youdao":
         await lock_tran.send(f"该翻译项禁止禁用!")
     elif tran in tran_type:
-        lock_tran_list["manual"].extend([tran])
+        if tran not in lock_tran_list["manual"]:
+            lock_tran_list["manual"].append(tran)
         logger.info(f"禁用成功")
         await lock_tran.send(f"禁用成功")
     else:
@@ -185,7 +186,9 @@ async def _():
 @show_lock_trans.handle()
 async def _():
     lock_list = lock_tran_list["auto"].copy()
-    lock_list.extend(lock_tran_list["manual"])
+    for tran in lock_tran_list["manual"]:
+        if tran not in lock_list:
+            lock_list.append(tran)
     if len(lock_list) == 0:
         await show_lock_trans.send("目前没有翻译项被禁用")
     else:

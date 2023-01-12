@@ -24,7 +24,6 @@ def check_character(name, valid_names, tts_gal):
     config_file = ""
     model_file = ""
     for names, model in tts_gal.items():
-        print(names, type(names))
         if names in valid_names and \
                 ((isinstance(names, str) and names == name) or
                  ((isinstance(names, tuple) and name in names))):
@@ -275,7 +274,7 @@ async def translate(tran_type: List[str], lock_tran_list: Dict[str, List[str]], 
         if tran not in lock_tran_list["manual"] and tran not in lock_tran_list["auto"]:
             res, flag = await support_tran[tran](text, lang)
             if flag:
-                lock_tran_list["auto"].extend([tran])
+                lock_tran_list["auto"].append(tran)
             if res:
                 break
     return res
