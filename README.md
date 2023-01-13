@@ -87,9 +87,9 @@ apt-get install ffmpeg
 | 配置项  | 必填 | 类型 | 默认值 |  说明  |
 | :-----: | :--: | :----: | :----: | :-----: |
 | tts_gal |  是  | Dict[Tuble[str],List[str]] | {():[""]} | 生成指定角色语音的关键配置，具体可见[tts_gal的配置要求](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md#%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%A6%81%E6%B1%82) |
-| auto_delete_voice | 否 | Bool | True | 是否自动删除生成语音，`True`为是，`False`为否<br>(配置文件中请填`true`或`false`) |
+| auto_delete_voice | 否 | Bool | True | 是否自动删除生成语音，`True`为是，`False`为否 |
 | decibel | 否 | int | -10 | 发送语音相对生成的分贝数<br>(原生成的音频音量可能比较大，因此通过此项来降低，负数为降，整数位升) |
-| tts_gal_is_at | 否 | Bool | True | 使用该功能是否需要@机器人，<br>(若填写，填`true`或`false`) |
+| tts_gal_is_at | 否 | Bool | True | 使用该功能是否需要@机器人 |
 | tts_gal_prefix | 否 | str | ""(空) | 使用该插件时的触发匹配前缀，减少冲突 |
 | tts_gal_priority | 否 | int | 3 | 该插件的优先级大小 |
 | tts_gal_tran_type | 否 | List[str] | ["youdao"] | 文本翻译使用项，默认为有道翻译("youdao")，可支持百度翻译("baidu")和腾讯翻译("tencent")，填写顺序为翻译调用优先级，若填写百度和腾讯翻译后需填写对应的配置项 |
