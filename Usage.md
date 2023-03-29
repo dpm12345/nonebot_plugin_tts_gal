@@ -136,10 +136,12 @@ tts_gal = '{
 #### 关于symbols
 
 这里推荐在 json 文件里自行添加，因为各自训练的`symbols`可能会有些许差异，具体`symbols`可以查看模型作者提供的信息。
-如果未设置symbols值，会根据`language`配置项选择默认的`symbols`
+
+如果未设置`symbols`值，会根据`language`配置项选择默认的`symbols`
+
 如果`symbols`难以添加，可以自行在代码目录下的`text/symbols.py`文件内添加`symbols`，如`symbols`的变量名为`sym`，那么可以在 json 配置文件的`symbols`项填写字符串 "sym"，而不是填列表
 
-(目前默认只支持ja和zh-CHS,原因为zh-CHS的symbols通过json难以手动导入)
+(目前默认只支持 ja 和 zh-CHS,原因为 zh-CHS 的`symbols`通过 json 难以手动导入)
 
 ## 例子示例
 
