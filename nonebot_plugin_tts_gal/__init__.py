@@ -25,7 +25,6 @@ from .config import *
 from .utils import *
 from .models import SynthesizerTrn
 from .function import *
-from .text.symbols import symbols_ja, symbols_zh_CHS
 
 
 __plugin_meta__ = PluginMetadata(
@@ -40,14 +39,11 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "example": f"{trigger_rule} 宁宁说おはようございます.",
         "author": "dpm12345 <1006975692@qq.com>",
-        "version": "0.3.8",
+        "version": "0.3.9",
     },
 )
 
-symbols_dict = {
-    "zh-CHS": symbols_zh_CHS,
-    "ja": symbols_ja
-}
+
 
 
 auto_delete_voice = tts_gal_config.auto_delete_voice
@@ -101,7 +97,9 @@ async def voicHandler(
 
     # 翻译的目标语言
     lang = load_language(hps_ms)
-    symbols = load_symbols(hps_ms, lang, symbols_dict)
+    symbols = load_symbols(hps_ms, lang)
+    if not symbols:
+        await voice.finish("symbols项配置错误")
 
     # 文本处理
     text = changeE2C(text) if lang == "zh-CHS" else changeC2E(text)

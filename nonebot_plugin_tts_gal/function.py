@@ -15,9 +15,16 @@ from torch import no_grad, LongTensor
 from .utils import *
 from nonebot.log import logger
 from .config import tts_gal_config
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Union
+from pathlib import Path
 from sys import maxsize
+from .text.symbols import *
 
+
+symbols_dict = {
+    "zh-CHS": symbols_zh_CHS,
+    "ja": symbols_ja
+}
 
 def check_character(name, valid_names, tts_gal):
     index = None
@@ -44,10 +51,12 @@ def load_language(hps_ms):
         return "ja"
 
 
-def load_symbols(hps_ms, lang, symbols_dict):
+def load_symbols(hps_ms, lang):
     try:
         symbols = hps_ms.symbols
-    except:
+        if isinstance(symbols,str):
+            symbols = eval(symbols)
+    except AttributeError:
         logger.info("配置文件中缺失symbols项,建议手动添加")
         if lang in symbols_dict.keys():
             logger.info("采用language指定的symbols项")
@@ -55,6 +64,9 @@ def load_symbols(hps_ms, lang, symbols_dict):
         else:
             logger.info("该语言未有默认symbols项，将采用日语symbols")
             symbols = symbols_dict["ja"]
+    except NameError:
+        logger.error(f"不存在{symbols}项")
+        symbols = None
     return symbols
 
 
@@ -270,6 +282,7 @@ support_tran = {
 
 
 async def translate(tran_type: List[str], lock_tran_list: Dict[str, List[str]], text: str, lang: str) -> str:
+    res = ""
     for tran in tran_type:
         if tran not in lock_tran_list["manual"] and tran not in lock_tran_list["auto"]:
             res, flag = await support_tran[tran](text, lang)
@@ -280,7 +293,7 @@ async def translate(tran_type: List[str], lock_tran_list: Dict[str, List[str]], 
     return res
 
 
-def change_by_decibel(audio_path: str, output_dir: str, decibel):
+def change_by_decibel(audio_path: Union[str,Path], output_dir: Union[str,Path], decibel):
     ext = os.path.basename(audio_path).strip().split('.')[-1]
     if ext not in ['wav', 'mp3']:
         raise Exception('format error')
