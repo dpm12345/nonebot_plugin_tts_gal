@@ -47,7 +47,7 @@ __plugin_meta__ = PluginMetadata(
 
 
 auto_delete_voice = tts_gal_config.auto_delete_voice
-tts_gal = eval(tts_gal_config.tts_gal)
+tts_gal = load_tts_gal(tts_gal_config.tts_gal)
 tran_type = tts_gal_config.tts_gal_tran_type
 prefix = tts_gal_config.tts_gal_prefix
 priority = tts_gal_config.tts_gal_priority

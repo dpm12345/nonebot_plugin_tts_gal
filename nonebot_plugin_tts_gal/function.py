@@ -7,6 +7,7 @@ import json
 import uuid
 import hmac
 import base64
+import re
 from ffmpy import FFmpeg
 import os
 from .text import text_to_sequence
@@ -25,6 +26,19 @@ symbols_dict = {
     "zh-CHS": symbols_zh_CHS,
     "ja": symbols_ja
 }
+
+def load_tts_gal(tts_gal_config:str):
+    res = {}
+    a = tts_gal_config.replace("'", "\"").split("\n")[1:-1]
+    for i in a:
+        names = re.findall(r"\"([^\"]*)\"", i)
+        num = re.findall(
+            r"\d+", list(filter(lambda x: x != "", i.split(",")))[-1])
+        trigger_name = tuple(names[0:-1])
+        model_name = names[-1]
+        index = int(num[0]) if len(num) else None
+        res[trigger_name] = [model_name,index]
+    return res
 
 def check_character(name, valid_names, tts_gal):
     index = None
@@ -53,21 +67,22 @@ def load_language(hps_ms):
 
 def load_symbols(hps_ms, lang):
     try:
-        symbols = hps_ms.symbols
-        if isinstance(symbols,str):
-            symbols = eval(symbols)
+        sym = hps_ms.symbols
     except AttributeError:
         logger.info("配置文件中缺失symbols项,建议手动添加")
         if lang in symbols_dict.keys():
             logger.info("采用language指定的symbols项")
-            symbols = symbols_dict[lang]
+            sym = symbols_dict[lang]
         else:
             logger.info("该语言未有默认symbols项，将采用日语symbols")
-            symbols = symbols_dict["ja"]
-    except NameError:
-        logger.error(f"不存在{symbols}项")
-        symbols = None
-    return symbols
+            sym = symbols_dict["ja"]
+    if isinstance(sym,str):
+        if sym in globals():
+            sym = globals()[sym]
+        else:
+            logger.error(f"不存在{sym}项")
+            sym = None
+    return sym
 
 
 def get_text(text, hps, symbols, lang, cleaned=False):

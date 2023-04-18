@@ -203,6 +203,10 @@ sudo apt install cmake
 
 ## 📝 更新日志
 
+**2023.4.18 version 0.3.10：**
+
+修改部分代码
+
 **2023.4.9 version 0.3.9：**
 
 支持添加生成symbols的代码，以便添加更多的symbols,详见[Usage.md](https://github.com/dpm12345/nonebot_plugin_tts_gal/blob/master/Usage.md#%E5%85%B3%E4%BA%8Esymbols)
