@@ -50,7 +50,7 @@ def check_character(name, valid_names, tts_gal):
                  ((isinstance(names, tuple) and name in names))):
             config_file = model[0] + ".json"
             model_file = model[0] + ".pth"
-            index = None if len(model) == 1 else int(model[1])
+            index = model[1]
             break
     return config_file, model_file, index
 
