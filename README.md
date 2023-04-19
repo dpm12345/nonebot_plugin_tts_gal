@@ -203,6 +203,10 @@ sudo apt install cmake
 
 ## 📝 更新日志
 
+**2023.4.19 version 0.3.11：**
+
+fix bug [#41](https://github.com/dpm12345/nonebot_plugin_tts_gal/issues/41)
+
 **2023.4.18 version 0.3.10：**
 
 修改部分代码
