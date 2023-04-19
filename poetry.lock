@@ -140,7 +140,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "importlib-metadata"
-version = "6.4.1"
+version = "6.5.0"
 description = "Read metadata from Python packages"
 category = "main"
 optional = false
@@ -700,8 +700,8 @@ idna = [
     {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
 ]
 importlib-metadata = [
-    {file = "importlib_metadata-6.4.1-py3-none-any.whl", hash = "sha256:63ace321e24167d12fbb176b6015f4dbe06868c54a2af4f15849586afb9027fd"},
-    {file = "importlib_metadata-6.4.1.tar.gz", hash = "sha256:eb1a7933041f0f85c94cd130258df3fb0dec060ad8c1c9318892ef4192c47ce1"},
+    {file = "importlib_metadata-6.5.0-py3-none-any.whl", hash = "sha256:03ba783c3a2c69d751b109fc0c94a62c51f581b3d6acf8ed1331b6d5729321ff"},
+    {file = "importlib_metadata-6.5.0.tar.gz", hash = "sha256:7a8bdf1bc3a726297f5cfbc999e6e7ff6b4fa41b26bba4afc580448624460045"},
 ]
 Janome = [
     {file = "Janome-0.4.2-py2.py3-none-any.whl", hash = "sha256:d292e458aa8a72b4aae51ae1e0cd91bf463beb95ad1ec118be7aab87eea1a454"},
