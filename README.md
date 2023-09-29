@@ -22,6 +22,8 @@ _✨ [Nonebot2](https://github.com/nonebot/nonebot2) 基于nonebot2和vits的本
 
 </div>
 
+# NOTE: 因学业繁忙, 现暂停维护
+
 ## 💬 前言
 
 平时因为学业问题，有时可能会回复得比较慢，请见谅。
